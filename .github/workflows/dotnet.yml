@@ -1,0 +1,74 @@
+name: .NET
+
+on:
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+     # Add NuGet Sources
+
+    - name: Create Local NuGet Directory
+      run: mkdir ~/nuget
+
+    - name: Add Local Nuget Source
+      run: dotnet nuget add source ~/nuget
+
+    - name: Add Garage Group NuGet Source
+      run: >
+        dotnet nuget add source ${{ vars.GG_NUGET_SOURCE_URL }}
+        -n garage
+        -u ${{ secrets.GG_NUGET_SOURCE_USER_NAME }}
+        -p ${{ secrets.GG_NUGET_SOURCE_USER_PASSWORD }}
+        --store-password-in-clear-text
+
+    # Api.Contract
+
+    - name: Restore Api.Contract
+      run: dotnet restore ./src/*/Api.Contract.csproj
+
+    - name: Build Api.Contract
+      run: dotnet build ./src/*/Api.Contract.csproj --no-restore  -c Release
+
+    - name: Pack Api.Contract
+      run: dotnet pack ./src/*/Api.Contract.csproj --no-restore -o ~/nuget  -c Release
+
+    # Api
+
+    - name: Restore Api
+      run: dotnet restore ./src/*/Api.csproj
+
+    - name: Build Api
+      run: dotnet build ./src/*/Api.csproj --no-restore  -c Release
+
+    - name: Pack Api
+      run: dotnet pack ./src/*/Api.csproj --no-restore -o ~/nuget  -c Release
+
+    # Api.Test
+
+    - name: Restore Api.Test
+      run: dotnet restore ./src/*/Api.Test.csproj
+
+    - name: Test Api.Test
+      run: dotnet test ./src/*/Api.Test.csproj --no-restore  -c Release
+
+    # Push
+
+    - name: Push Packages
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: >
+        dotnet nuget push "../../../nuget/*.nupkg"
+        -s ${{ vars.GG_NUGET_SOURCE_URL }}
+        -k ${{ secrets.GG_NUGET_SOURCE_USER_PASSWORD }}
+        --skip-duplicate

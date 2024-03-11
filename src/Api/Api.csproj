@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GarageGroup.Infra.Http.Api.Contract" Version="0.0.1-build.6" />
+    <PackageReference Include="GarageGroup.Infra.Http.Api.Contract" Version="0.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="PrimeFuncPack.Dependency" Version="2.1.0" />
   </ItemGroup>

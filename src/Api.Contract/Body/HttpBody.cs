@@ -20,12 +20,12 @@ public readonly struct HttpBody : IEquatable<HttpBody>
 
     public BinaryData? Content { get; init; }
 
-    public static HttpBody SerializeAsJson<T>(T value)
+    public static HttpBody SerializeAsJson<T>(T value, JsonSerializerOptions? serializerOptions = null)
         =>
         new()
         {
             Type = new(MediaTypeNames.Application.Json, CharSetUtf8),
-            Content = BinaryData.FromObjectAsJson(value, SerializerOptions)
+            Content = BinaryData.FromObjectAsJson(value, serializerOptions ?? SerializerOptions)
         };
 
     public T? DeserializeFromJson<T>()

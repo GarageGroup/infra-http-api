@@ -38,7 +38,7 @@ public readonly record struct HttpSendFailure
             return new(StatusCode, builder.ToString());
         }
 
-        builder = builder.AppendLine().Append(Body.Content.ToString());
+        builder = builder.Append('\n').Append(Body.Content.ToString());
         return new(StatusCode, builder.ToString());
     }
 }

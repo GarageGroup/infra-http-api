@@ -28,14 +28,14 @@ public readonly struct HttpBody : IEquatable<HttpBody>
             Content = BinaryData.FromObjectAsJson(value, serializerOptions ?? SerializerOptions)
         };
 
-    public T? DeserializeFromJson<T>()
+    public T? DeserializeFromJson<T>(JsonSerializerOptions? serializerOptions = null)
     {
         if (Content is null)
         {
             return default;
         }
 
-        return Content.ToObjectFromJson<T>(SerializerOptions);
+        return Content.ToObjectFromJson<T>(serializerOptions ?? SerializerOptions);
     }
 
     public override int GetHashCode()

@@ -8,11 +8,11 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GarageGroup.Infra</RootNamespace>
     <AssemblyName>GarageGroup.Infra.Http.Api</AssemblyName>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GarageGroup.Infra.Http.Api.Contract" Version="0.1.0" />
+    <PackageReference Include="GarageGroup.Infra.Http.Api.Contract" Version="0.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="PrimeFuncPack.Dependency" Version="2.1.0" />
   </ItemGroup>

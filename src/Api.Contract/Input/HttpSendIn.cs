@@ -26,8 +26,16 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
         builder.Add(EqualityComparer<HttpVerb>.Default.GetHashCode(Method));
         builder.Add(StringComparer.InvariantCulture.GetHashCode(RequestUri));
 
-        builder.Add(EqualityComparer<FlatArray<KeyValuePair<string, string>>>.Default.GetHashCode(GetOrderedHeaders(Headers)));
+        builder.Add(EqualityComparer<Type>.Default.GetHashCode(typeof(FlatArray<KeyValuePair<string, string>>)));
+        foreach (var header in GetOrderedHeaders(Headers))
+        {
+            builder.Add(EqualityComparer<Type>.Default.GetHashCode(typeof(KeyValuePair<string, string>)));
+            builder.Add(StringComparer.InvariantCultureIgnoreCase.GetHashCode(header.Key));
+            builder.Add(StringComparer.InvariantCulture.GetHashCode(header.Value));
+        }
+
         builder.Add(EqualityComparer<HttpBody>.Default.GetHashCode(Body));
+        builder.Add(EqualityComparer<HttpSuccessType>.Default.GetHashCode(SuccessType));
 
         return builder.ToHashCode();
     }
@@ -76,19 +84,20 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
 
     public override string ToString()
     {
-        var builder = new StringBuilder(nameof(SuccessType)).Append(" = ").Append(SuccessType).AppendLine();
-        builder = builder.Append(Method.Name).Append(' ').Append(RequestUri);
+        var builder = new StringBuilder()
+            .AppendFormat("{0} = {1}", nameof(SuccessType), SuccessType).Append('\n')
+            .AppendFormat("{0} {1}", Method.Name, RequestUri);
 
         var orderedHeaders = GetOrderedHeaders(Headers);
 
         if (orderedHeaders.IsNotEmpty)
         {
-            builder = builder.AppendLine();
+            builder = builder.Append('\n');
         }
 
         foreach (var header in orderedHeaders)
         {
-            builder.AppendLine().Append(header.Key).Append(": ").Append(header.Value);
+            builder.Append('\n').AppendFormat("{0}: {1}", header.Key, header.Value);
         }
 
         var body = Body.ToString();
@@ -97,7 +106,7 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
             return builder.ToString();
         }
 
-        return builder.AppendLine().AppendLine().Append(body).ToString();
+        return builder.Append('\n').Append('\n').Append(body).ToString();
     }
 
     public static bool operator ==(HttpSendIn left, HttpSendIn right)
@@ -128,11 +137,12 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
 
             foreach (var value in item.Value.OrEmpty().Split(Separator))
             {
-                var trimmedValue = item.Value.Trim();
+                var trimmedValue = value.Trim();
 
                 if (headers.TryGetValue(item.Key, out var values))
                 {
                     values.Add(trimmedValue);
+                    continue;
                 }
 
                 headers.Add(item.Key, [trimmedValue]);
@@ -144,8 +154,7 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
 
         foreach (var header in headers.OrderBy(GetKey))
         {
-            builder[index] = new(header.Key.ToLowerInvariant(), string.Join(Separator, header.Value));
-            index++;
+            builder[index++] = new(header.Key.ToLowerInvariant(), string.Join(Separator, header.Value));
         }
 
         return builder.MoveToFlatArray();

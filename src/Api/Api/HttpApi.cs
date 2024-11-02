@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GarageGroup.Infra;
 
-public sealed partial class HttpApi : IHttpApi
+internal sealed partial class HttpApi : IHttpApi
 {
     private readonly HttpClient httpClient;
 

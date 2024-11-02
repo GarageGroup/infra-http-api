@@ -22,7 +22,8 @@ public static class HttpApiDependency
         }
     }
 
-    public static Dependency<IHttpApi> UseHttpApi(this Dependency<HttpMessageHandler> dependency, Func<IServiceProvider, HttpApiOption>? optionResolver)
+    public static Dependency<IHttpApi> UseHttpApi(
+        this Dependency<HttpMessageHandler> dependency, Func<IServiceProvider, HttpApiOption>? optionResolver)
     {
         ArgumentNullException.ThrowIfNull(dependency);
 

@@ -2,12 +2,12 @@
 
 namespace GarageGroup.Infra.Http.Api.Test;
 
-partial class HttpSendInTest
+partial class HttpVerbTest
 {
     [Theory]
     [MemberData(nameof(EqualTestData))]
     public static void InequalityOperator_SourceIsEqualToOther_ExpectFalse(
-        HttpSendIn source, HttpSendIn other)
+        HttpVerb source, HttpVerb other)
     {
         var result = source != other;
         Assert.False(result);
@@ -16,7 +16,7 @@ partial class HttpSendInTest
     [Theory]
     [MemberData(nameof(UnequalTestData))]
     public static void InequalityOperator_SourceIsNotEqualToOther_ExpectTrue(
-        HttpSendIn source, HttpSendIn other)
+        HttpVerb source, HttpVerb other)
     {
         var result = source != other;
         Assert.True(result);
@@ -25,7 +25,7 @@ partial class HttpSendInTest
     [Theory]
     [MemberData(nameof(NullableEqualTestData))]
     public static void InequalityOperator_SourceIsNullEqualToOther_ExpectFalse(
-        HttpSendIn? source, HttpSendIn? other)
+        HttpVerb? source, HttpVerb? other)
     {
         var result = source != other;
         Assert.False(result);
@@ -34,7 +34,7 @@ partial class HttpSendInTest
     [Theory]
     [MemberData(nameof(NullableUnequalTestData))]
     public static void InequalityOperator_SourceIsNullNotEqualToOther_ExpectTrue(
-        HttpSendIn? source, HttpSendIn? other)
+        HttpVerb? source, HttpVerb? other)
     {
         var result = source != other;
         Assert.True(result);

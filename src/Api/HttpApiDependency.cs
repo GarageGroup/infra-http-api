@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using PrimeFuncPack;
@@ -86,7 +87,7 @@ public static class HttpApiDependency
             return null;
         }
 
-        if (TimeSpan.TryParse(value, out var result))
+        if (TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out var result))
         {
             return result;
         }

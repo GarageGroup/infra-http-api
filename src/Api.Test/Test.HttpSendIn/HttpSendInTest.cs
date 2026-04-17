@@ -56,6 +56,27 @@ public static partial class HttpSendInTest
             },
             {
                 new(
+                    method: HttpVerb.Get,
+                    requestUri: "https://www.example.com/about")
+                {
+                    Headers =
+                    [
+                        new(" ", "some value"),
+                        new("x-ms-date", "Wed, 03 Jul 2024 14:41:12 GMT")
+                    ]
+                },
+                new(
+                    method: HttpVerb.Get,
+                    requestUri: "https://www.example.com/about")
+                {
+                    Headers =
+                    [
+                        new("x-ms-date", "Wed, 03 Jul 2024 14:41:12 GMT")
+                    ]
+                }
+            },
+            {
+                new(
                     method: HttpVerb.Delete,
                     requestUri: "http://www.example.com/blog/post-title")
                 {
@@ -172,6 +193,14 @@ public static partial class HttpSendInTest
             },
             {
                 new(
+                    method: HttpVerb.Get,
+                    requestUri: "https://www.example.com/about"),
+                new(
+                    method: HttpVerb.Post,
+                    requestUri: "https://www.example.com/about")
+            },
+            {
+                new(
                     method: HttpVerb.Post,
                     requestUri: "https://www.example.com/about"),
                 new(
@@ -266,6 +295,27 @@ public static partial class HttpSendInTest
                         Content = new("Some text")
                     }
                 }
+            }
+        };
+
+    public static TheoryData<HttpSendIn?, HttpSendIn?> NullableEqualTestData
+        =>
+        new()
+        {
+            { null, null }
+        };
+
+    public static TheoryData<HttpSendIn?, HttpSendIn?> NullableUnequalTestData
+        =>
+        new()
+        {
+            {
+                null,
+                new(HttpVerb.Get, "https://www.example.com/about")
+            },
+            {
+                new(HttpVerb.Get, "https://www.example.com/about"),
+                null
             }
         };
 }

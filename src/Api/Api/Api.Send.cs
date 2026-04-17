@@ -7,20 +7,10 @@ namespace GarageGroup.Infra;
 
 partial class HttpApi
 {
-    public ValueTask<Result<HttpSendOut, HttpSendFailure>> SendAsync(HttpSendIn input, CancellationToken cancellationToken)
+    public async ValueTask<Result<HttpSendOut, HttpSendFailure>> SendAsync(HttpSendIn input, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return ValueTask.FromCanceled<Result<HttpSendOut, HttpSendFailure>>(cancellationToken);
-        }
-
-        return InnerSendAsync(input, cancellationToken);
-    }
-
-    private async ValueTask<Result<HttpSendOut, HttpSendFailure>> InnerSendAsync(HttpSendIn input, CancellationToken cancellationToken)
-    {
         using var httpRequest = BuildHttpRequest(input);
         using var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
@@ -37,16 +27,14 @@ partial class HttpApi
                 Body = response.Body
             };
         }
-        else
+
+        return new HttpSendFailure
         {
-            return new HttpSendFailure
-            {
-                StatusCode = (HttpFailureCode)response.StatusCode,
-                ReasonPhrase = response.ReasonPhrase,
-                Headers = response.Headers,
-                Body = response.Body
-            };
-        }
+            StatusCode = (HttpFailureCode)response.StatusCode,
+            ReasonPhrase = response.ReasonPhrase,
+            Headers = response.Headers,
+            Body = response.Body
+        };
     }
 
     private static HttpRequestMessage BuildHttpRequest(HttpSendIn input)

@@ -5,6 +5,15 @@ namespace GarageGroup.Infra.Http.Api.Test;
 partial class HttpSendInTest
 {
     [Fact]
+    public static void Equals_OtherHasSameReference_ExpectTrue()
+    {
+        var source = new HttpSendIn(HttpVerb.Get, "https://www.example.com/about");
+
+        var result = source.Equals(source);
+        Assert.True(result);
+    }
+
+    [Fact]
     public static void Equals_OtherIsNull_ExpectFalse()
     {
         var source = new HttpSendIn(HttpVerb.Get, "https://www.example.com/about");

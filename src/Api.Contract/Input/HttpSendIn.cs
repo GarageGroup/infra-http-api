@@ -109,13 +109,25 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
         return builder.Append('\n').Append('\n').Append(body).ToString();
     }
 
-    public static bool operator ==(HttpSendIn left, HttpSendIn right)
-        =>
-        left.Equals(right);
+    public static bool operator ==(HttpSendIn? left, HttpSendIn? right)
+    {
+        if (ReferenceEquals(left, right))
+        {
+            return true;
+        }
 
-    public static bool operator !=(HttpSendIn left, HttpSendIn right)
-        =>
-        left.Equals(right) is not true;
+        return left?.Equals(right) is true;
+    }
+
+    public static bool operator !=(HttpSendIn? left, HttpSendIn? right)
+    {
+        if (ReferenceEquals(left, right))
+        {
+            return false;
+        }
+
+        return left?.Equals(right) is not true;
+    }
 
     private static FlatArray<KeyValuePair<string, string>> GetOrderedHeaders(FlatArray<KeyValuePair<string, string>> source)
     {

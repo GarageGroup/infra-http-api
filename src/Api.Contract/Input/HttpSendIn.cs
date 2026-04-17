@@ -120,8 +120,14 @@ public sealed class HttpSendIn(HttpVerb method, [StringSyntax("Uri")] string req
     }
 
     public static bool operator !=(HttpSendIn? left, HttpSendIn? right)
-        =>
-        (left == right) is false;
+    {
+        if (ReferenceEquals(left, right))
+        {
+            return false;
+        }
+
+        return left?.Equals(right) is not true;
+    }
 
     private static FlatArray<KeyValuePair<string, string>> GetOrderedHeaders(FlatArray<KeyValuePair<string, string>> source)
     {

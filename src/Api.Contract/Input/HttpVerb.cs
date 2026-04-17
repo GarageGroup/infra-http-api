@@ -80,11 +80,17 @@ public sealed class HttpVerb : IEquatable<HttpVerb>
         return StringComparer.InvariantCultureIgnoreCase.Equals(Name, other.Name);
     }
 
-    public static bool operator ==(HttpVerb left, HttpVerb right)
-        =>
-        left.Equals(right);
+    public static bool operator ==(HttpVerb? left, HttpVerb? right)
+    {
+        if (ReferenceEquals(left, right))
+        {
+            return true;
+        }
 
-    public static bool operator !=(HttpVerb left, HttpVerb right)
+        return left?.Equals(right) is true;
+    }
+
+    public static bool operator !=(HttpVerb? left, HttpVerb? right)
         =>
-        left.Equals(right) is not true;
+        (left == right) is false;
 }

@@ -42,9 +42,10 @@ internal sealed partial class HttpApi : IHttpApi
             if (headerValues.TryGetValue(header.Key, out var values))
             {
                 values.Add(header.Value.OrEmpty());
+                continue;
             }
 
-            headerValues.Add(header.Key, [header.Value]);
+            headerValues.Add(header.Key, [header.Value.OrEmpty()]);
         }
 
         foreach (var header in headerValues)

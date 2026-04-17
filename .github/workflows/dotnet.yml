@@ -21,16 +21,16 @@ jobs:
       run: mkdir ~/nuget
 
     - name: Restore Infra.Http.Api
-      run: dotnet restore ./Infra.Http.Api.slnx
+      run: dotnet restore ./*/Infra.Http.Api.slnx
 
     - name: Build Infra.Http.Api
-      run: dotnet build ./Infra.Http.Api.slnx --no-restore -c Release
+      run: dotnet build ./*/Infra.Http.Api.slnx --no-restore -c Release
 
     - name: Test Infra.Http.Api
-      run: dotnet test ./Infra.Http.Api.slnx --no-restore -c Release
+      run: dotnet test ./*/Infra.Http.Api.slnx --no-restore -c Release
 
     - name: Pack Infra.Http.Api
-      run: dotnet pack ./Infra.Http.Api.slnx --no-build -o ~/nuget -c Release
+      run: dotnet pack ./*/Infra.Http.Api.slnx --no-build -o ~/nuget -c Release
 
     # Push
 

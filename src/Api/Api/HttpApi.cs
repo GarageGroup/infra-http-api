@@ -83,6 +83,19 @@ internal sealed partial class HttpApi : IHttpApi
                 yield return new(header.Key, value);
             }
         }
+
+        if (httpResponse.Content is null)
+        {
+            yield break;
+        }
+
+        foreach (var header in httpResponse.Content.Headers)
+        {
+            foreach (var value in header.Value)
+            {
+                yield return new(header.Key, value);
+            }
+        }
     }
 
     private static async Task<HttpBody> ReadBodyAsync(HttpContent httpContent, CancellationToken cancellationToken)

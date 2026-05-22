@@ -84,4 +84,22 @@ public static partial class HttpApiTest
 
         return response;
     }
+
+    private static bool ContainsHeader(FlatArray<KeyValuePair<string, string>> headers, string key, string value)
+    {
+        foreach (var header in headers)
+        {
+            if (string.Equals(header.Key, key, StringComparison.InvariantCultureIgnoreCase) is false)
+            {
+                continue;
+            }
+
+            if (string.Equals(header.Value, value, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

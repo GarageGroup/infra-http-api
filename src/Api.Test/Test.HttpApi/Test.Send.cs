@@ -12,11 +12,7 @@ partial class HttpApiTest
     [Theory]
     [MemberData(nameof(SuccessCaseTestData))]
     public static async Task SendAsync_ResponseIsSuccess_ExpectMappedSuccess(
-        HttpSuccessType successType,
-        int statusCode,
-        string? reasonPhrase,
-        bool hasHeaders,
-        bool hasBody)
+        HttpSuccessType successType, int statusCode, string? reasonPhrase, bool hasHeaders, bool hasBody)
     {
         var source = CreateApi(
             sendAsync: (_, _) =>
@@ -44,9 +40,8 @@ partial class HttpApiTest
 
         if (hasHeaders)
         {
-            Assert.Equal(1, success.Headers.Length);
-            Assert.True(string.Equals(success.Headers[0].Key, "x-request-id", StringComparison.InvariantCultureIgnoreCase));
-            Assert.Equal("abc", success.Headers[0].Value);
+            Assert.True(ContainsHeader(success.Headers, "x-request-id", "abc"));
+            Assert.True(ContainsHeader(success.Headers, "Content-Type", "application/json; charset=utf-8"));
         }
         else
         {
@@ -97,14 +92,17 @@ partial class HttpApiTest
 
         Assert.Equal((HttpFailureCode)statusCode, failure.StatusCode);
         Assert.Equal(reasonPhrase, failure.ReasonPhrase);
-        Assert.Equal(1, failure.Headers.Length);
-        Assert.True(string.Equals(failure.Headers[0].Key, "x-request-id", StringComparison.InvariantCultureIgnoreCase));
-        Assert.Equal("abc", failure.Headers[0].Value);
+        Assert.True(ContainsHeader(failure.Headers, "x-request-id", "abc"));
 
         if (body is null)
         {
             Assert.Equal(default, failure.Body);
             return;
+        }
+
+        if (string.IsNullOrWhiteSpace(mediaType) is false)
+        {
+            Assert.True(ContainsHeader(failure.Headers, "Content-Type", $"{mediaType}; charset={charSet}"));
         }
 
         Assert.Equal(mediaType, failure.Body.Type.MediaType);
